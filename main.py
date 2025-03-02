@@ -1,4 +1,4 @@
-import math
+import sys, math
 
 def getQuadraticRoots(a, b, c): 
     discriminant = b**2 - 4*a*c
@@ -33,5 +33,32 @@ def interactive_mode():
     else:
         print("The roots are:", ", ".join(map(str, roots)))
 
+def file_mode(filepath):
+    try:
+        with open(filepath, "r") as file:
+            data = file.readline().strip().split()
+            if len(data) != 3:
+                raise ValueError("Invalid file format")
+            a, b, c = map(float, data)
+            if a == 0:
+                raise ValueError
+    except (ValueError, FileNotFoundError) as e:
+        if isinstance(e, FileNotFoundError):
+            print("File not found")
+        else: 
+            print("Invalid file format")
+        sys.exit(1)
+    
+    print(f"Quadratic equation: {a}x² + {b}x + {c} = 0")
+    roots = getQuadraticRoots(a, b, c)
+    if roots is None:
+        print("No real roots")
+    else:
+        print("The roots are:", ", ".join(map(str, roots)))
+
+
 if __name__ == "__main__":
-    interactive_mode()
+    if len(sys.argv) == 2:
+        file_mode(sys.argv[1])
+    else:
+        interactive_mode()
